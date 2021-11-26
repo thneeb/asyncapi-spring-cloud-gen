@@ -1,0 +1,71 @@
+---
+asyncapi: 2.0.0
+info:
+  title: pin-event
+  version: 1.0.0
+channels:
+  pin-data-captured:
+    subscribe:
+      message:
+        headers:
+          $ref: '#/components/schemas/General'
+        payload:
+          $ref: '#/components/schemas/Payload'
+components:
+  schemas:
+    SetPin:
+      description: ""
+      required:
+      - pinType
+      - pin
+      - sync
+      type: object
+      properties:
+        pinType:
+          $ref: '#/components/schemas/PinType'
+          description: ""
+        pin:
+          description: ""
+          type: string
+        sync:
+          description: ""
+          type: boolean
+    PinType:
+      description: ""
+      enum:
+      - mpp
+      - skypin
+      type: string
+    General:
+      description: ""
+      required:
+      - customerId
+      type: object
+      properties:
+        customerId:
+          description: ""
+          type: string
+        correlationId:
+          description: ""
+          type: string
+    LockPin:
+      description: ""
+      required:
+      - pinType
+      type: object
+      properties:
+        pinType:
+          $ref: '#/components/schemas/PinType'
+          description: ""
+    Payload:
+      description: ""
+      required:
+      - message
+      type: object
+      oneOf:
+      - $ref: '#/components/schemas/LockPin'
+      - $ref: '#/components/schemas/SetPin'
+      properties:
+        message:
+          description: ""
+          type: string
