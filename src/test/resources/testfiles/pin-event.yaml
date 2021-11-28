@@ -3,14 +3,13 @@ asyncapi: 2.0.0
 info:
   title: pin-event
   version: 1.0.0
+  contact:
+    name: Thomas Neeb
+    email: thomas.neeb@nttdata.com
 channels:
   pin-data-captured:
     subscribe:
-      message:
-        headers:
-          $ref: '#/components/schemas/General'
-        payload:
-          $ref: '#/components/schemas/Payload'
+      $ref: '#/components/messages/PinMessage'
 components:
   schemas:
     SetPin:
@@ -36,18 +35,6 @@ components:
       - mpp
       - skypin
       type: string
-    General:
-      description: ""
-      required:
-      - customerId
-      type: object
-      properties:
-        customerId:
-          description: ""
-          type: string
-        correlationId:
-          description: ""
-          type: string
     LockPin:
       description: ""
       required:
@@ -61,6 +48,7 @@ components:
       description: ""
       required:
       - message
+      - customerId
       type: object
       oneOf:
       - $ref: '#/components/schemas/LockPin'
@@ -69,3 +57,27 @@ components:
         message:
           description: ""
           type: string
+        customerId:
+          description: ""
+          type: string
+    Header:
+      description: ""
+      type: object
+      properties:
+        correlationId:
+          description: ""
+          type: string
+        originator:
+          description: ""
+          type: string
+  messages:
+    PinMessage:
+      headers:
+        $ref: '#/components/schemas/Header'
+      description: ""
+      bindings:
+        kafka:
+          key:
+            type: string
+      payload:
+        $ref: '#/components/schemas/Payload'

@@ -29,7 +29,7 @@ public class AsyncApiGen {
             return;
         }
         final String filename = args[0];
-        GeneratorConfig config = new GeneratorConfig(filename, "tmp", "de.neebs.model", "de.neebs.api");
+        GeneratorConfig config = new GeneratorConfig(filename, "tmp", "de.neebs.model", "de.neebs.api", false);
         AsyncApiGenerator asyncApiGenerator = new AsyncApiGenerator(objectMapper, yamlObjectMapper);
         asyncApiGenerator.run(config);
     }

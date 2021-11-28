@@ -1,12 +1,10 @@
 package de.neebs;
 
 import de.neebs.asyncapi.Definition;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
 
-@Component
 public class ModelClassGenerator {
     private final GeneratorConfig config;
 
@@ -17,13 +15,13 @@ public class ModelClassGenerator {
         this.fileUtils = fileUtils;
     }
 
-    public void generate(Map<String, Definition> schemas) {
+    public void generateModelClasses(Map<String, Definition> schemas) {
         for (Map.Entry<String, Definition> entry : schemas.entrySet()) {
-            generate(entry.getKey(), entry.getValue());
+            generateModelClasses(entry.getKey(), entry.getValue());
         }
     }
 
-    private void generate(String className, Definition definition) {
+    private void generateModelClasses(String className, Definition definition) {
         if (definition.getEnumeration() != null) {
             generateEnum(className, definition.getEnumeration());
         } else {
@@ -58,7 +56,7 @@ public class ModelClassGenerator {
         }
         sb.append("}");
         sb.append(System.lineSeparator());
-        fileUtils.writeFile(className, config.getSourceFolder(), config.getModelPackage(), new String(sb));
+        fileUtils.writeJavaFile(className, config.getSourceFolder(), config.getModelPackage(), new String(sb));
     }
 
     private boolean isValueEnum(List<String> enumeration) {
@@ -105,7 +103,7 @@ public class ModelClassGenerator {
         sb.append(generateOneOf(definition.getOneOf()));
         sb.append("}");
         sb.append(System.lineSeparator());
-        fileUtils.writeFile(className, config.getSourceFolder(), config.getModelPackage(), new String(sb));
+        fileUtils.writeJavaFile(className, config.getSourceFolder(), config.getModelPackage(), new String(sb));
     }
 
     private String generateOneOf(List<Definition> oneOf) {

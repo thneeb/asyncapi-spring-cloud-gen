@@ -20,7 +20,7 @@ public class AsyncApiGenerator {
 
     public void run(GeneratorConfig config) {
         try {
-            Map<String, Object> map = yamlObjectMapper.readValue(new File(config.getInputSpec()), new TypeReference<>() {});
+            Map<String, Object> map = yamlObjectMapper.readValue(new File(config.getInputSpec()), new TypeReference<Map<String, Object>>() {});
             if (map.get("asyncapi") == null) {
                 System.out.println("Only AsyncAPI is supported");
                 return;
@@ -28,8 +28,13 @@ public class AsyncApiGenerator {
             AsyncApi asyncApi = objectMapper.convertValue(map, AsyncApi.class);
             FileUtils fileUtils = new FileUtils();
             if (asyncApi.getComponents() != null && asyncApi.getComponents().getSchemas() != null) {
-                final ModelClassGenerator modelClassGenerator = new ModelClassGenerator(config, fileUtils);
-                modelClassGenerator.generate(asyncApi.getComponents().getSchemas());
+                if (config.isAvro()) {
+                    MultiFileAvroGenerator avroGenerator = new MultiFileAvroGenerator(config, fileUtils);
+                    avroGenerator.generateMessage(asyncApi.getComponents());
+                } else {
+                    final ModelClassGenerator modelClassGenerator = new ModelClassGenerator(config, fileUtils);
+                    modelClassGenerator.generateModelClasses(asyncApi.getComponents().getSchemas());
+                }
             }
         } catch (IOException e) {
             throw new IllegalStateException(e);

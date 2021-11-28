@@ -13,10 +13,6 @@
 		<version>2.5.7</version>
 	</parent>
 
-    <properties>
-        <java.version>1.11</java.version>
-    </properties>
-
     <dependencies>
 		<dependency>
             <groupId>org.springframework.boot</groupId>
@@ -64,6 +60,7 @@
                     <mainClass>de.neebs.Application</mainClass>
                 </configuration>
             </plugin>
+<!--
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -97,6 +94,7 @@
                     </execution>
                 </executions>
             </plugin>
+-->
         </plugins>
     </build>
 </project>

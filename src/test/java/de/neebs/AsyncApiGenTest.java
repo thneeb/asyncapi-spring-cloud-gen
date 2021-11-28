@@ -15,28 +15,43 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class AsyncApiGenTest {
     private AsyncApiGen asyncApiGen;
 
+    private GeneratorConfig config;
+
+    private AsyncApiGenerator asyncApiGenerator;
+
+    private MultiFileAvroGenerator multiFileAvroGenerator;
+
     @BeforeEach
     public void init() {
         RestConfig restConfig = new RestConfig();
         ObjectMapper objectMapper = restConfig.jacksonBuilder().build();
         ObjectMapper yamlObjectMapper = restConfig.yamlObjectMapper();
         asyncApiGen = new AsyncApiGen(objectMapper, yamlObjectMapper);
+        config = new GeneratorConfig("src/test/resources/testfiles/pin-event.yaml", "tmp", "de.neebs.model", "de.neebs.api", false);
+        asyncApiGenerator = new AsyncApiGenerator(objectMapper, yamlObjectMapper);
     }
 
     @Test
-    public void testWithoutInput(CapturedOutput outputCapture) throws Exception {
+    public void testWithoutInput(CapturedOutput outputCapture) {
         asyncApiGen.run();
         assertThat(outputCapture).contains("You need to pass the AsyncApi file.");
     }
 
     @Test
-    public void testSwagger2File(CapturedOutput outputCapture) throws Exception {
+    public void testSwagger2File(CapturedOutput outputCapture) {
         asyncApiGen.run( "src/test/resources/testfiles/pin-event.yaml");
         assertThat(outputCapture).contains("Only AsyncAPI is supported");
     }
 
     @Test
-    public void testAsyncApi(CapturedOutput outputCapture) throws Exception {
+    public void testAsyncApi(CapturedOutput outputCapture) {
         asyncApiGen.run( "src/test/resources/testfiles/pin-event.yaml");
+    }
+
+    @Test
+    public void testAsyncApiAvroGen(CapturedOutput outputCapture) {
+        config.setAvro(true);
+        asyncApiGenerator.run(config);
+        config.setAvro(false);
     }
 }

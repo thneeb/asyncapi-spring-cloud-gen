@@ -9,5 +9,6 @@ import java.util.Map;
 @Setter
 public class Components {
     private Map<String, Definition> schemas;
+    private Map<String, Message> messages;
     private Object securitySchemes;
 }

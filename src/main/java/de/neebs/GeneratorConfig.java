@@ -14,4 +14,5 @@ public class GeneratorConfig {
     private String sourceFolder;
     private String modelPackage;
     private String apiPackage;
+    private boolean avro;
 }

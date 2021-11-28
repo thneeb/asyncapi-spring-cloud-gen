@@ -13,6 +13,6 @@ import java.util.Map;
 public class AsyncApi {
     private String asyncapi;
     private Map<String, Object> info;
-    private Map<String, Object> channels;
+    private Map<String, Channel> channels;
     private Components components;
 }

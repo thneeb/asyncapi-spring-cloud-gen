@@ -21,6 +21,7 @@ public class Definition {
     private Discriminator discriminator;
     @JsonProperty("$ref")
     private String reference;
-    private List<Map<String, Object>> allOf;
+    private List<Definition> allOf;
+    private List<Definition> anyOf;
     private List<Definition> oneOf;
 }
