@@ -15,4 +15,5 @@ public class GeneratorConfig {
     private String modelPackage;
     private String apiPackage;
     private boolean avro;
+    private boolean spring;
 }

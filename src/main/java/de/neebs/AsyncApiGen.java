@@ -1,15 +1,9 @@
 package de.neebs;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.neebs.asyncapi.AsyncApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Map;
 
 @Component
 public class AsyncApiGen {
@@ -29,7 +23,7 @@ public class AsyncApiGen {
             return;
         }
         final String filename = args[0];
-        GeneratorConfig config = new GeneratorConfig(filename, "tmp", "de.neebs.model", "de.neebs.api", false);
+        GeneratorConfig config = new GeneratorConfig(filename, "tmp", "de.neebs.model", "de.neebs.api", false, true);
         AsyncApiGenerator asyncApiGenerator = new AsyncApiGenerator(objectMapper, yamlObjectMapper);
         asyncApiGenerator.run(config);
     }

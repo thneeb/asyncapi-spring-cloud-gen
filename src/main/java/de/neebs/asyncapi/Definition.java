@@ -18,7 +18,7 @@ public class Definition {
     private List<String> required;
     @JsonProperty("enum")
     private List<String> enumeration;
-    private Discriminator discriminator;
+    private String discriminator;
     @JsonProperty("$ref")
     private String reference;
     private List<Definition> allOf;

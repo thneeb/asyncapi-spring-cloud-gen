@@ -19,7 +19,7 @@ public class AsyncApiGenTest {
 
     private AsyncApiGenerator asyncApiGenerator;
 
-    private MultiFileAvroGenerator multiFileAvroGenerator;
+    private AvroGenerator multiFileAvroGenerator;
 
     @BeforeEach
     public void init() {
@@ -27,7 +27,7 @@ public class AsyncApiGenTest {
         ObjectMapper objectMapper = restConfig.jacksonBuilder().build();
         ObjectMapper yamlObjectMapper = restConfig.yamlObjectMapper();
         asyncApiGen = new AsyncApiGen(objectMapper, yamlObjectMapper);
-        config = new GeneratorConfig("src/test/resources/testfiles/pin-event.yaml", "tmp", "de.neebs.model", "de.neebs.api", false);
+        config = new GeneratorConfig("src/test/resources/testfiles/pin-event.yaml", "tmp", "de.neebs.model", "de.neebs.api", false, true);
         asyncApiGenerator = new AsyncApiGenerator(objectMapper, yamlObjectMapper);
     }
 

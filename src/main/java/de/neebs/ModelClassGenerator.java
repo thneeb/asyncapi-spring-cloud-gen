@@ -10,9 +10,12 @@ public class ModelClassGenerator {
 
     private final FileUtils fileUtils;
 
-    public ModelClassGenerator(GeneratorConfig config, FileUtils fileUtils) {
+    private final AsyncApi2Java asyncApi2Java;
+
+    public ModelClassGenerator(GeneratorConfig config, FileUtils fileUtils, AsyncApi2Java asyncApi2Java) {
         this.config = config;
         this.fileUtils = fileUtils;
+        this.asyncApi2Java = asyncApi2Java;
     }
 
     public void generateModelClasses(Map<String, Definition> schemas) {
@@ -144,33 +147,11 @@ public class ModelClassGenerator {
     private String generateAttribute(String attributeName, Definition definition, boolean required) {
         StringBuilder sb = new StringBuilder();
         sb.append("\tprivate ");
-        sb.append(convertDataType(definition.getType(), definition.getReference(), required));
+        sb.append(asyncApi2Java.convertDataType(definition, required));
         sb.append(" ");
         sb.append(attributeName);
         sb.append(";");
         sb.append(System.lineSeparator());
         return new String(sb);
-    }
-
-    private String convertDataType(String type, String reference, boolean required) {
-        if ("String".equalsIgnoreCase(type)) {
-            return "String";
-        } else if ("int".equalsIgnoreCase(type) || "Integer".equalsIgnoreCase(type)) {
-            if (required) {
-                return "int";
-            } else {
-                return "Integer";
-            }
-        } else if ("boolean".equalsIgnoreCase(type)) {
-            if (required) {
-                return "boolean";
-            } else {
-                return "Boolean";
-            }
-        } else if (type == null) {
-            return reference.substring(reference.lastIndexOf("/") + 1);
-        } else {
-            return "Unknown type: " + type;
-        }
     }
 }

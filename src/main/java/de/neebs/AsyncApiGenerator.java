@@ -27,14 +27,21 @@ public class AsyncApiGenerator {
             }
             AsyncApi asyncApi = objectMapper.convertValue(map, AsyncApi.class);
             FileUtils fileUtils = new FileUtils();
+            AsyncApi2Java asyncApi2Java = new AsyncApi2Java();
             if (asyncApi.getComponents() != null && asyncApi.getComponents().getSchemas() != null) {
                 if (config.isAvro()) {
-                    MultiFileAvroGenerator avroGenerator = new MultiFileAvroGenerator(config, fileUtils);
-                    avroGenerator.generateMessage(asyncApi.getComponents());
+                    AvroGenerator avroGenerator = new AvroGenerator(config, fileUtils);
+                    avroGenerator.generateAvro(asyncApi.getComponents());
                 } else {
-                    final ModelClassGenerator modelClassGenerator = new ModelClassGenerator(config, fileUtils);
+                    final ModelClassGenerator modelClassGenerator = new ModelClassGenerator(config, fileUtils, asyncApi2Java);
                     modelClassGenerator.generateModelClasses(asyncApi.getComponents().getSchemas());
                 }
+            }
+            if (asyncApi.getComponents() != null && asyncApi.getComponents().getMessages() != null) {
+                SenderGenerator senderGenerator = new SenderGenerator(config, fileUtils, asyncApi2Java);
+                senderGenerator.generateSender(asyncApi.getComponents());
+                ListenerGenerator listenerGenerator = new ListenerGenerator(config, fileUtils, asyncApi2Java);
+                listenerGenerator.generateListener(asyncApi.getComponents());
             }
         } catch (IOException e) {
             throw new IllegalStateException(e);

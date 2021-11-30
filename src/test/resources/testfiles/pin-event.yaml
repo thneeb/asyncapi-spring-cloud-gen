@@ -19,6 +19,8 @@ components:
       - pin
       - sync
       type: object
+      allOf:
+      - $ref: '#/components/schemas/General'
       properties:
         pinType:
           $ref: '#/components/schemas/PinType'
@@ -40,6 +42,8 @@ components:
       required:
       - pinType
       type: object
+      allOf:
+      - $ref: '#/components/schemas/General'
       properties:
         pinType:
           $ref: '#/components/schemas/PinType'
@@ -48,7 +52,6 @@ components:
       description: ""
       required:
       - message
-      - customerId
       type: object
       oneOf:
       - $ref: '#/components/schemas/LockPin'
@@ -57,9 +60,7 @@ components:
         message:
           description: ""
           type: string
-        customerId:
-          description: ""
-          type: string
+      discriminator: message
     Header:
       description: ""
       type: object
@@ -68,6 +69,15 @@ components:
           description: ""
           type: string
         originator:
+          description: ""
+          type: string
+    General:
+      description: ""
+      required:
+      - customerId
+      type: object
+      properties:
+        customerId:
           description: ""
           type: string
   messages:
