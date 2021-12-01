@@ -12,7 +12,7 @@ public class AvroGenerator {
 
     private final FileUtils fileUtils;
 
-    private final Set<String> PRIMITIVES = Set.of("string", "int", "long", "float", "double", "boolean");
+    private final Set<String> PRIMITIVES = Set.of("string", "integer", "long", "float", "double", "boolean");
 
     public AvroGenerator(GeneratorConfig config, FileUtils fileUtils) {
         this.config = config;
@@ -194,12 +194,17 @@ public class AvroGenerator {
             className = definition.getReference().substring(definition.getReference().lastIndexOf("/") + 1);
             sb.append("\"").append(className).append("\"");
         } else if (PRIMITIVES.contains(className)) {
-            sb.append("\"").append(className).append("\"");
+            sb.append("\"").append(convertDataTypeToAvro(className)).append("\"");
         } else {
             sb.append("\"").append(className).append("\"");
         }
         return new String(sb);
     }
 
-
+    private String convertDataTypeToAvro(String className) {
+        if ("integer".equalsIgnoreCase(className)) {
+            return "int";
+        }
+        return className;
+    }
 }

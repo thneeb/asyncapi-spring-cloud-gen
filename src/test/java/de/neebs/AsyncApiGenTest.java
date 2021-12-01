@@ -38,12 +38,6 @@ public class AsyncApiGenTest {
     }
 
     @Test
-    public void testSwagger2File(CapturedOutput outputCapture) {
-        asyncApiGen.run( "src/test/resources/testfiles/pin-event.yaml");
-        assertThat(outputCapture).contains("Only AsyncAPI is supported");
-    }
-
-    @Test
     public void testAsyncApi(CapturedOutput outputCapture) {
         asyncApiGen.run( "src/test/resources/testfiles/pin-event.yaml");
     }
