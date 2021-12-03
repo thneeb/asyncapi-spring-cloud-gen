@@ -193,6 +193,10 @@ public class AvroGenerator {
         if (definition.getReference() != null) {
             className = definition.getReference().substring(definition.getReference().lastIndexOf("/") + 1);
             sb.append("\"").append(className).append("\"");
+        } else if ("array".equalsIgnoreCase(className)) {
+            definition = definition.getItems();
+            String dataType = generateDataType("object".equalsIgnoreCase(definition.getType()) ? className : definition.getType(), definition);
+            sb.append("{ \"type\": \"array\", \"items\": ").append(dataType).append("}");
         } else if (PRIMITIVES.contains(className)) {
             sb.append("\"").append(convertDataTypeToAvro(className)).append("\"");
         } else {

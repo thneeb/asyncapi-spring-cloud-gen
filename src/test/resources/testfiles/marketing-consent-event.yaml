@@ -1,0 +1,171 @@
+---
+asyncapi: 2.0.0
+info:
+  title: marketing-consent-event
+  version: 1.0.0
+components:
+  schemas:
+    Subscription:
+      description: ""
+      required:
+      - name
+      - agreed
+      - subscriptionId
+      type: object
+      properties:
+        name:
+          description: ""
+          type: string
+        agreed:
+          description: ""
+          type: boolean
+        subscriptionId:
+          description: ""
+          type: string
+          readOnly: true
+      example:
+        name: Sky Highlights
+        agreed: true
+        subscriptionId: CSC-Sky Highlights-IND-wl97373d-c0d1-4a06-8db4-00e2da084ffc
+    ContactPoint:
+      description: ""
+      required:
+      - name
+      - agreed
+      - contactPointId
+      type: object
+      properties:
+        name:
+          description: ""
+          type: string
+          readOnly: true
+        agreed:
+          description: ""
+          type: boolean
+        contactPointId:
+          description: MD5 hash of the name
+          type: string
+          readOnly: true
+      example:
+        name: Email
+        agreed: true
+        contactPointId: CPTC-Email-IND-wl97373d-c0d1-4a06-8db4-00e2da084ffc
+    DoiConfirmation:
+      description: ""
+      required:
+      - ott
+      type: object
+      properties:
+        ott:
+          description: ""
+          type: string
+    Permissions:
+      description: ""
+      type: object
+      properties:
+        globalBookmarking:
+          description: Global Bookmarking
+          type: boolean
+        kidAutoplay:
+          description: Kids Autoplay
+          type: boolean
+        personalRecommendation:
+          description: Personal Recommendation
+          type: boolean
+        masterContactLock:
+          description: Master Contact Lock
+          type: boolean
+        marketingPermission:
+          description: Marketing Permission
+          type: boolean
+        marketResearch:
+          description: Market Research
+          type: boolean
+        legitimateInterest:
+          description: UWG & IAK
+          type: boolean
+        diagnosisTool:
+          description: Diagnosis Tool
+          type: boolean
+        analyseProfiling:
+          description: Analysis/Profiling
+          type: boolean
+        adPromoSmart:
+          description: Ad Smart/Promo Smart
+          type: boolean
+      example:
+        globalBookmarking: true
+        kidAutoplay: true
+        personalRecommendation: false
+        masterContactLock: true
+        marketingPermission: true
+        marketResearch: true
+        legitimateInterest: true
+        diagnosisTool: false
+        analyseProfiling: true
+        adPromoSmart: true
+    PermissionData:
+      description: ""
+      type: object
+      properties:
+        permissions:
+          $ref: '#/components/schemas/Permissions'
+          description: ""
+        subscriptions:
+          description: ""
+          type: array
+          items:
+            $ref: '#/components/schemas/Subscription'
+        contactPoints:
+          description: ""
+          type: array
+          items:
+            $ref: '#/components/schemas/ContactPoint'
+      example:
+        permissions:
+          globalBookmarking: true
+          kidAutoplay: true
+          personalRecommendation: true
+          masterContactLock: true
+          marketingPermission: true
+          marketResearch: true
+          legitimateInterest: true
+          diagnosisTool: true
+          analyseProfiling: true
+          adPromoSmart: true
+        subscriptions:
+        - name: Sky Highlights
+          agreed: true
+          subscriptionId: CSC-Sky Highlights-IND-wl97373d-c0d1-4a06-8db4-00e2da084ffc
+        - name: Sky Extra
+          agreed: false
+          subscriptionId: CSC-Sky Extra-IND-wl97373d-c0d1-4a06-8db4-00e2da084ffc
+        contactPoints:
+        - name: Phone
+          agreed: false
+          contactPointId: CPTC-Phone-IND-wl97373d-c0d1-4a06-8db4-00e2da084ffc
+        - name: SMS
+          agreed: true
+          contactPointId: CPTC-SMS-IND-wl97373d-c0d1-4a06-8db4-00e2da084ffc
+    Header:
+      description: ""
+      type: object
+    Payload:
+      description: ""
+      required:
+      - message
+      type: object
+      oneOf:
+      - $ref: '#/component/schema/PermissionData'
+      properties:
+        message:
+          description: ""
+          type: string
+      discriminator: message
+  messages:
+    MarketingConsentMessage:
+      headers:
+        $ref: '#/components/schema/Header'
+      description: ""
+      payload:
+        $ref: '#/components/schema/Payload'

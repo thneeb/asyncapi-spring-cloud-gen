@@ -27,7 +27,7 @@ public class AsyncApiGenTest {
         ObjectMapper objectMapper = restConfig.jacksonBuilder().build();
         ObjectMapper yamlObjectMapper = restConfig.yamlObjectMapper();
         asyncApiGen = new AsyncApiGen(objectMapper, yamlObjectMapper);
-        config = new GeneratorConfig("src/test/resources/testfiles/pin-event.yaml", "tmp", "de.neebs.model", "de.neebs.api", false, true);
+        config = new GeneratorConfig("src/test/resources/testfiles/pin-event.yaml", "tmp", "de.neebs.model", "de.neebs.api", true, true);
         asyncApiGenerator = new AsyncApiGenerator(objectMapper, yamlObjectMapper);
     }
 
@@ -40,6 +40,15 @@ public class AsyncApiGenTest {
     @Test
     public void testAsyncApi(CapturedOutput outputCapture) {
         asyncApiGen.run( "src/test/resources/testfiles/pin-event.yaml");
+    }
+
+    @Test
+    public void testMarketingConsent(CapturedOutput outputCapture) {
+        config.setAvro(true);
+        config.setInputSpec("src/test/resources/testfiles/marketing-consent-event.yaml");
+        asyncApiGenerator.run(config);
+        config.setAvro(false);
+        asyncApiGen.run( );
     }
 
     @Test

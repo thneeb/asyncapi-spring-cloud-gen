@@ -108,12 +108,12 @@ public class SenderGenerator {
         }
         sb.append("\t\tProducerRecord<").append(keyClass).append(", ").append(masterClass).append("> record = new ProducerRecord<>(topic, key, ").append(masterAttribute).append(");");
         sb.append(System.lineSeparator());
-        sb.append("\t\tif (header.getCorrelationId() != null) {");
-        sb.append(System.lineSeparator());
-        sb.append("\t\t\trecord.headers().add(\"correlationId\", header.getCorrelationId().getBytes());");
-        sb.append(System.lineSeparator());
-        sb.append("\t\t}");
-        sb.append(System.lineSeparator());
+//        sb.append("\t\tif (header.getCorrelationId() != null) {");
+//        sb.append(System.lineSeparator());
+//        sb.append("\t\t\trecord.headers().add(\"correlationId\", header.getCorrelationId().getBytes());");
+//        sb.append(System.lineSeparator());
+//        sb.append("\t\t}");
+//        sb.append(System.lineSeparator());
         sb.append("\t\tkafkaTemplate.send(record);");
         sb.append(System.lineSeparator());
         sb.append("\t}");
