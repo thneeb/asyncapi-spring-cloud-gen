@@ -49,25 +49,23 @@ public class SenderGenerator {
             sb.append("@Component");
             sb.append(System.lineSeparator());
         }
-        sb.append("public class ").append(name).append("Sender {");
+        sb.append("public abstract class Abstract").append(name).append("Sender {");
         sb.append(System.lineSeparator());
-        sb.append("\tprivate final KafkaTemplate kafkaTemplate;");
-        sb.append(System.lineSeparator());
-        sb.append(System.lineSeparator());
-        sb.append("\t@Value(\"${topic.mapping.pinMessage}\")");
-        sb.append(System.lineSeparator());
-        sb.append("\tprivate String topic;");
+        String keyClass = asyncApi2Java.extractKeyDataType(message);
+        String masterClass = asyncApi2Java.convertDataType(message.getPayload(), true);
+        sb.append("\tprivate final KafkaTemplate<").append(keyClass).append(", ").append(masterClass).append("> kafkaTemplate;");
         sb.append(System.lineSeparator());
         sb.append(System.lineSeparator());
-        if (config.isSpring()) {
-            sb.append("\t@Autowired");
-            sb.append(System.lineSeparator());
-        }
-        sb.append("\tpublic ").append(name).append("Sender").append("(KafkaTemplate kafkaTemplate) {");
+        sb.append("\t@Autowired");
+        sb.append(System.lineSeparator());
+        sb.append("\tpublic Abstract").append(name).append("Sender").append("(KafkaTemplate<").append(keyClass).append(", ").append(masterClass).append("> kafkaTemplate) {");
         sb.append(System.lineSeparator());
         sb.append("\t\tthis.kafkaTemplate = kafkaTemplate;");
         sb.append(System.lineSeparator());
         sb.append("\t}");
+        sb.append(System.lineSeparator());
+        sb.append(System.lineSeparator());
+        sb.append("\tabstract String getTopic();");
         sb.append(System.lineSeparator());
         sb.append(System.lineSeparator());
         sb.append(sendMessage(message, null, schemas));
@@ -80,7 +78,7 @@ public class SenderGenerator {
         sb.append("}");
         sb.append(System.lineSeparator());
 //        System.out.println(new String(sb));
-        fileUtils.writeJavaFile(name + "Sender", config.getSourceFolder(), config.getApiPackage(), new String(sb));
+        fileUtils.writeJavaFile("Abstract" + name + "Sender", config.getSourceFolder(), config.getApiPackage(), new String(sb));
     }
 
     private String sendMessage(Message message, Definition payload, Map<String, Definition> schemas) {
@@ -106,7 +104,7 @@ public class SenderGenerator {
                     .append("build();");
             sb.append(System.lineSeparator());
         }
-        sb.append("\t\tProducerRecord<").append(keyClass).append(", ").append(masterClass).append("> record = new ProducerRecord<>(topic, key, ").append(masterAttribute).append(");");
+        sb.append("\t\tProducerRecord<").append(keyClass).append(", ").append(masterClass).append("> record = new ProducerRecord<>(getTopic(), key, ").append(masterAttribute).append(");");
         sb.append(System.lineSeparator());
 //        sb.append("\t\tif (header.getCorrelationId() != null) {");
 //        sb.append(System.lineSeparator());

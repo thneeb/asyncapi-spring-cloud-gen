@@ -57,4 +57,13 @@ public class AsyncApiGenTest {
         asyncApiGenerator.run(config);
         config.setAvro(false);
     }
+
+    @Test
+    public void testAccountEvent(CapturedOutput outputCapture) {
+        config.setAvro(true);
+        config.setInputSpec("src/test/resources/testfiles/account-event.yaml");
+        asyncApiGenerator.run(config);
+        config.setAvro(false);
+        asyncApiGen.run( );
+    }
 }

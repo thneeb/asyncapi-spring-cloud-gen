@@ -1,0 +1,456 @@
+---
+asyncapi: 2.0.0
+info:
+  title: Account Domain Events
+  version: 1.0.0
+  description: |
+    This project describes the outbound events within account domain.
+    We have two topics here
+    1. account_data_saved which gets all the converted platform events from Salesforce
+    2. pin_data_saved which gets all the pin updates (encrypted but not hashed) to be consumed by the downstream systems
+  contact:
+    name: Thomas Neeb
+    email: thomas.neeb@nttdata.com
+channels:
+  account_data_saved:
+    subscribe:
+      operationId: publishAccountData
+      summary: Publishes the account relevant information
+      message:
+        $ref: '#/components/messages/AccountMessage'
+components:
+  schemas:
+    CustomerPersonalDetails:
+      description: ""
+      required:
+      - firstName
+      - lastName
+      - birthDate
+      - customerNumber
+      - email
+      - birthdate
+      - countryCode
+      type: object
+      properties:
+        firstName:
+          description: ""
+          type: string
+          example: Thomas
+        lastName:
+          description: ""
+          type: string
+          example: Neeb
+        birthdate:
+          format: date
+          description: ""
+          type: string
+        customerNumber:
+          description: although known as CustomerCode
+          maxLength: 10
+          minLength: 10
+          type: string
+        email:
+          description: ""
+          type: string
+        phone:
+          description: ""
+          type: string
+        countryCode:
+          description: ""
+          type: string
+    GeneralHeader:
+      description: ""
+      required:
+      - customerid
+      type: object
+      properties:
+        customerid:
+          description: ""
+          type: string
+    CustomerPermissions:
+      description: ""
+      required:
+      - masterContactLock
+      - marketingPermission
+      - uwg
+      - marketResearch
+      - diagnosisTool
+      - globalBookmarking
+      - personalRecommendation
+      - kidAutoplay
+      - analysisProfiling
+      - adSmartPromoSmart
+      type: object
+      properties:
+        masterContactLock:
+          description: ""
+          type: boolean
+        marketingPermission:
+          description: hasOptedOutOfSolicit
+          type: boolean
+        uwg:
+          description: ""
+          type: boolean
+        marketResearch:
+          description: hasOptedOutProcessing
+          type: boolean
+        diagnosisTool:
+          description: ""
+          type: boolean
+        globalBookmarking:
+          description: ""
+          type: boolean
+        personalRecommendation:
+          description: ""
+          type: boolean
+        kidAutoplay:
+          description: ""
+          type: boolean
+        analysisProfiling:
+          description: ""
+          type: boolean
+        adSmartPromoSmart:
+          description: ""
+          type: boolean
+    BillingAddress:
+      description: ""
+      required:
+      - street
+      - postalCode
+      - city
+      type: object
+      properties:
+        street:
+          description: ""
+          type: string
+        houseNumber:
+          description: ""
+          type: string
+        postalCode:
+          description: ""
+          type: string
+        city:
+          description: ""
+          type: string
+        step:
+          description: although known as staircase
+          type: string
+        door:
+          description: ""
+          type: string
+    PostalShippingAddress:
+      description: ""
+      required:
+      - firstName
+      - lastName
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/BillingAddress'
+      properties:
+        firstName:
+          description: ""
+          type: string
+        lastName:
+          description: ""
+          type: string
+    PackstationShippingAddress:
+      description: ""
+      required:
+      - firstName
+      - lastName
+      - postNumber
+      - packstationNumber
+      - postalCode
+      - city
+      type: object
+      properties:
+        firstName:
+          description: ""
+          type: string
+        lastName:
+          description: ""
+          type: string
+        postNumber:
+          description: ""
+          type: string
+        packstationNumber:
+          description: ""
+          type: string
+        postalCode:
+          description: ""
+          type: string
+        city:
+          description: ""
+          type: string
+    ContactPointTypeConsent:
+      description: ""
+      required:
+      - externalId
+      - captureDate
+      - privacyConsentStatus
+      type: object
+      properties:
+        externalId:
+          description: ""
+          type: string
+        captureDate:
+          format: date
+          description: ""
+          type: string
+        effectiveFrom:
+          format: date
+          description: ""
+          type: string
+        effectiveTo:
+          format: date
+          description: ""
+          type: string
+        doubleConsentCaptureDate:
+          format: date
+          description: ""
+          type: string
+        captureSource:
+          description: Should become an enum
+          type: string
+        status:
+          description: Should become an enum
+          type: string
+        captureContactPointType:
+          description: Should become an enum
+          type: string
+        name:
+          description: '        '
+          type: string
+    CommunicationSubscriptionConsent:
+      description: ""
+      required:
+      - externalId
+      type: object
+      properties:
+        externalId:
+          description: ""
+          type: string
+        captureDate:
+          format: date
+          description: ""
+          type: string
+        effectiveFrom:
+          format: date
+          description: ""
+          type: string
+        effectiveTo:
+          format: date
+          description: ""
+          type: string
+        captureSource:
+          description: Should become an enum
+          type: string
+        status:
+          description: Should become an enum
+          type: string
+        contactPointTypeExternalId:
+          description: ""
+          type: string
+        name:
+          description: '        '
+          type: string
+    CustomerStatus:
+      description: ""
+      required:
+      - status
+      type: object
+      properties:
+        status:
+          description: ""
+          enum:
+          - Active
+          - Idle
+          - Prospect
+          type: string
+    MethodOfPayment:
+      description: ""
+      required:
+      - externalId
+      - active
+      type: object
+      properties:
+        externalId:
+          description: ""
+          type: string
+        validFrom:
+          format: date
+          description: ""
+          type: string
+        validTo:
+          format: date
+          description: ""
+          type: string
+        active:
+          description: ""
+          type: boolean
+    DirectDebit:
+      description: ""
+      required:
+      - iban
+      - bankAccountHolderName
+      - sepaMandateId
+      - sepaSignDate
+      - bankAccountCountry
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/MethodOfPayment'
+      properties:
+        iban:
+          description: ""
+          type: string
+        bankAccountHolderName:
+          description: ""
+          type: string
+        sepaMandateId:
+          description: ""
+          type: string
+        sepaSignDate:
+          format: date
+          description: ""
+          type: string
+        bankAccountCountry:
+          description: ""
+          type: string
+    PaymentServiceProviderPayment:
+      description: ""
+      required:
+      - shopperReference
+      - recurringDetailReference
+      - pspReference
+      - reservedAmount
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/MethodOfPayment'
+      properties:
+        shopperReference:
+          description: ""
+          type: string
+        recurringDetailReference:
+          description: ""
+          type: string
+        pspReference:
+          description: ""
+          type: string
+        reservedAmount:
+          description: In EUR cents
+          type: number
+    CreditCard:
+      description: ""
+      required:
+      - cardHolderName
+      - cardIssuingCountry
+      - cardBin
+      - cardSummary
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PaymentServiceProviderPayment'
+      properties:
+        cardHolderName:
+          description: ""
+          type: string
+        cardIssuingCountry:
+          description: ""
+          maxLength: 2
+          minLength: 2
+          type: string
+        cardBin:
+          description: ""
+          maxLength: 6
+          minLength: 6
+          type: string
+        cardSummary:
+          description: ""
+          maxLength: 4
+          minLength: 4
+          type: string
+    AgeCheck:
+      description: ""
+      required:
+      - passed
+      - type
+      type: object
+      properties:
+        passed:
+          description: ""
+          type: boolean
+        type:
+          description: ""
+          type: string
+    IdCard:
+      description: ""
+      required:
+      - birthdate
+      - documentNumber
+      - expirationDate
+      - verificationNumber
+      type: object
+      properties:
+        idCardType:
+          description: ""
+          enum:
+          - de-idcard
+          - intl-passport
+          type: string
+        documentNumber:
+          description: ""
+          type: string
+        birthdate:
+          description: ""
+          type: string
+        expirationDate:
+          description: ""
+          type: string
+        verificationNumber:
+          description: ""
+          type: string
+    AccountDataSaved:
+      description: The payload object combines all the individual payload objects
+        with a discrimintor in place to select between the individual payloads. Only
+        one of the objects is filled in one event.
+      required:
+      - messageType
+      type: object
+      oneOf:
+      - $ref: '#/components/schemas/CustomerPersonalDetails'
+      - $ref: '#/components/schemas/CustomerPermissions'
+      - $ref: '#/components/schemas/BillingAddress'
+      - $ref: '#/components/schemas/PostalShippingAddress'
+      - $ref: '#/components/schemas/PackstationShippingAddress'
+      - $ref: '#/components/schemas/DirectDebit'
+      - $ref: '#/components/schemas/CreditCard'
+      - $ref: '#/components/schemas/PayPal'
+      - $ref: '#/components/schemas/ContactPointTypeConsent'
+      - $ref: '#/components/schemas/CommunicationSubscriptionConsent'
+      - $ref: '#/components/schemas/CustomerPermissions'
+      - $ref: '#/components/schemas/CustomerStatus'
+      - $ref: '#/components/schemas/IdCard'
+      properties:
+        messageType:
+          description: ""
+          type: string
+      discriminator: messageType
+    PayPal:
+      description: ""
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PaymentServiceProviderPayment'
+      properties:
+        email:
+          description: ""
+          type: string
+        issuingCountry:
+          description: ""
+          type: string
+  messages:
+    AccountMessage:
+      headers:
+        $ref: '#/components/schemas/GeneralHeader'
+      name: AccountDataMessage
+      description: ""
+      payload:
+        $ref: '#/components/schemas/AccountDataSaved'
